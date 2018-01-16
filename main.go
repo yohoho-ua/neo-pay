@@ -28,26 +28,23 @@ func main() {
 	myAddress := GetNewAddress();
 	SendNewAddress(myAddress)
 
+	//todo uncomment this block
+	/*bestBlockHash, err := client.GetBestBlockHash()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	//bestBlockHash, err := client.GetBestBlockHash()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//currentBlock, err := client.GetBlockByHash(bestBlockHash)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
+	currentBlock, err := client.GetBlockByHash(bestBlockHash)
+	if err != nil {
+		log.Fatal(err)
+	}*/
 
+	//only for test
 	currentBlock, err := client.GetBlockByIndex(1820000)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//trans, err := client.GetTransaction("0e9550edcf0a9675334a7dd3c32b621bbb4f5d9b2e65d42b3c33cd124752cf50")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
 
 	//all transactions for current (last) block
 	var transactions []models.Transaction = currentBlock.Transactions

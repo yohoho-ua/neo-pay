@@ -5,18 +5,23 @@ import (
 	"github.com/CityOfZion/neo-go-sdk/neo"
 	"github.com/CityOfZion/neo-go-sdk/neo/models"
 	"fmt"
+	"os"
+	"encoding/json"
 )
 
 //from config.json
 type Configuration struct {
 	AccountAddress string
-	Host           string
+	Host string
+	NodeURI string
 }
 
 func main() {
-	nodeURI := "http://localhost:10332"
+	configuration :=initConfig()
+
+	//nodeURI := "http://localhost:10332"
 	//   nodeURI := "http://test1.cityofzion.io:8880"
-	client := neo.NewClient(nodeURI)
+	client := neo.NewClient(configuration.NodeURI)
 
 	ok := client.Ping()
 	if !ok {
@@ -65,7 +70,7 @@ func main() {
 	//log.Printf("currentBlock : %v", currentBlock)
 
 }
-func checkVouts(transaction models.Transaction, address string, vouts *[]models.Vout)  {
+func checkVouts(transaction models.Transaction, address string, vouts *[]models.Vout) {
 	for _, vout := range transaction.Vout {
 		//fmt.Println(vout.Address)
 		if vout.Address == address {
@@ -74,7 +79,18 @@ func checkVouts(transaction models.Transaction, address string, vouts *[]models.
 	}
 
 }
-func SendNewAddress(address string){
+func SendNewAddress(address string) {
 	//todo send pay address to Front
+}
+
+func initConfig() *Configuration {
+	file, _ := os.Open("config.json")
+	decoder := json.NewDecoder(file)
+	configuration := Configuration{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	return &configuration
 }
 

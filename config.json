@@ -1,4 +1,5 @@
 {
     "AccountAddress": "AcuhtcyXqRuwao2ayvqLVuQqh8YY34mor1",
-    "Host": "http://localhost:20332"
+    "Host": "http://localhost:20332",
+    "NodeURI": "http://localhost:10332"
 }

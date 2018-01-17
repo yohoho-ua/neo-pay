@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"encoding/json"
+	"encoding/json"
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
@@ -17,6 +17,7 @@ func DepositHandler(w http.ResponseWriter, req *http.Request) {
 
 	customer := CreateCustomer(GetNewAddress)
 	Check(&customer)
+	json.NewEncoder(w).Encode(customer)
 	//w.Write(customer.AssignedAddress)
 }
 

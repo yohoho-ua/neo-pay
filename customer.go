@@ -1,14 +1,14 @@
 package main
 
 type Customer struct {
-	AssignedAddress string
-	balance         int64
+	AssignedAddress string 	`json:"address,omitempty"`
+	balance         int64  		`json:"balance,omitempty"`
 	startBlock      int64
-	statusPaid      bool
+	statusPaid      bool 		`json:"status,omitempty"`
 }
 
 //for better testing and mocking
-type NewAddressGetter func () string
+type NewAddressGetter func() string
 
 func CreateCustomer(addressGetter NewAddressGetter) Customer {
 	newAddress := addressGetter();

@@ -17,13 +17,14 @@
     </nav>
 
     <div class="container searchContainer">
-        <div class="search card card-body">
-            <form action="/neo" method="get">
-                <h1>get payment address</h1>
+        <!--<div class="search card card-body">-->
+            <!--<form action="/neo" method="get">-->
+                <!--<h1>get payment address</h1>-->
 
-                <button type="submit" class="btn btn-outline-primary" id = "transfer">get</button>
 
-            </form>
+            <!--</form>-->
+        <p >{{address}}</p>
+                <button v-on:click="getAddress" type="submit" class="btn btn-outline-primary" id = "transfer">get</button>
         </div>
     </div>
 </div>

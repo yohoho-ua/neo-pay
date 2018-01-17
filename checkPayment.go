@@ -88,6 +88,7 @@ func trackPayment(client neo.Client, currentIndex int64, customer *Customer,  pr
 		if customer.balance >= price {
 			fmt.Println("sucsess")
 			customer.statusPaid = true
+			break
 		} else {
 			currentIndex++
 		}

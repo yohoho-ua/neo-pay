@@ -7,74 +7,108 @@ import (
 	"fmt"
 	"os"
 	"encoding/json"
+	"strconv"
 )
+
+const (
+	assetTypeNEO = "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b"
+	assetTypeGAS = "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7"
+
+	//amount of blocks that will be tracked after customer has got payment address. Max wait time, default - 24 hours (or 5760 blocks, 15 sec/block)
+	//maxAddressLife = (60 * 60  * 24) / 15
+	maxAddressLife = (60 *10) / 15 //for test
+)
+
+type Customer struct {
+	AssignedAddress string
+	balance         int64
+	startBlock      int64
+	statusPaid      bool
+}
+
+
 
 //from config.json
 type Configuration struct {
-	AccountAddress string
-	Host string
 	NodeURI string
 }
 
 func main() {
-	configuration :=initConfig()
-
-	//nodeURI := "http://localhost:10332"
-	//   nodeURI := "http://test1.cityofzion.io:8880"
+	configuration := initConfig()
 	client := neo.NewClient(configuration.NodeURI)
-
 	ok := client.Ping()
 	if !ok {
 		log.Fatal("Unable to connect to NEO node")
 	}
 
-
-	//1.Generate new address and send to client
-	myAddress := GetNewAddress();
-	SendNewAddress(myAddress)
-
-	//todo uncomment this block
-	/*bestBlockHash, err := client.GetBestBlockHash()
+	//get current block hash to start tracking
+	bestBlockHash, err := client.GetBestBlockHash()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	//get corresponding block object
 	currentBlock, err := client.GetBlockByHash(bestBlockHash)
 	if err != nil {
 		log.Fatal(err)
-	}*/
-
-	//only for test
-	currentBlock, err := client.GetBlockByIndex(1820000)
-	if err != nil {
-		log.Fatal(err)
 	}
+	fmt.Println(currentBlock.Index)
+	//currentIndex := currentBlock.Index
+
+	//for test
+	currentIndex := int64(1817210)
 
 
-	//all transactions for current (last) block
-	var transactions []models.Transaction = currentBlock.Transactions
+	//for test
+	price := int64(26)
 
-	//all vouts where myAddress was detected
-	var vouts [] models.Vout
+	customer := createCustomer(currentIndex, 0)
 
-	//detect address
-	for _, element := range transactions {
-		//fmt.Println(element)
-		checkVouts(element, myAddress, &vouts)
-	}
+	//fmt.Println(customer)
 
-	for _, vout := range vouts {
-		fmt.Println(vout)
-	}
-	//log.Printf("Transaction: %v", trans.Vout[0].Address)
-	//log.Printf("currentBlock : %v", currentBlock)
+	trackPayment(client, currentIndex, &customer, price)
 
+	fmt.Println(customer)
 }
-func checkVouts(transaction models.Transaction, address string, vouts *[]models.Vout) {
+func trackPayment(client neo.Client, currentIndex int64, customer *Customer,  price int64) {
+	for {
+		if (currentIndex - customer.startBlock)>= maxAddressLife  {
+			fmt.Println("Payment not found")
+			break
+		}
+		currentBlock, err := client.GetBlockByIndex(currentIndex)
+		if err != nil {
+			log.Fatal(err)
+		}
+		//all transactions for current (last) block
+		var transactions []models.Transaction = currentBlock.Transactions
+
+
+		//detect address
+		for _, element := range transactions {
+			//fmt.Println(element)
+			checkVouts(element, customer.AssignedAddress, customer)
+		}
+		fmt.Printf("current index : %v, balance: %v \n", currentIndex, customer.balance)
+
+		if customer.balance >= price {
+			fmt.Println("sucsess")
+			customer.statusPaid = true
+			break
+		} else {
+			currentIndex++
+		}
+	}
+}
+
+func checkVouts(transaction models.Transaction, address string, customer *Customer) {
 	for _, vout := range transaction.Vout {
-		//fmt.Println(vout.Address)
-		if vout.Address == address {
-			*vouts = append(*vouts, vout)
+		if vout.Address == address && vout.Asset == assetTypeNEO {
+			paidAmount, err := strconv.ParseInt(vout.Value, 10, 64)
+			if err != nil {
+				log.Fatal(err)
+			}
+			customer.balance = customer.balance + paidAmount
 		}
 	}
 
@@ -92,5 +126,11 @@ func initConfig() *Configuration {
 		fmt.Println("error:", err)
 	}
 	return &configuration
+}
+
+func createCustomer(startingBlockIndex int64, balance int64) Customer {
+	newAddress := GetNewAddress();
+	return Customer{AssignedAddress: newAddress, startBlock: startingBlockIndex, balance: balance, statusPaid:false}
+
 }
 

@@ -15,9 +15,9 @@ var customers [] Customer
 
 func DepositHandler(w http.ResponseWriter, req *http.Request) {
 
-	customer := CreateCustomer()
-	Check(customer)
-	w.Write(customer.AssignedAddress)
+	customer := CreateCustomer(GetNewAddress)
+	Check(&customer)
+	//w.Write(customer.AssignedAddress)
 }
 
 func newRouter() *mux.Router {

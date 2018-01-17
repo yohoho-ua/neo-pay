@@ -7,12 +7,15 @@ type Customer struct {
 	statusPaid      bool
 }
 
-func CreateCustomer() Customer {
-	newAddress := getNewAddress();
+//for better testing and mocking
+type NewAddressGetter func () string
+
+func CreateCustomer(addressGetter NewAddressGetter) Customer {
+	newAddress := addressGetter();
 	return Customer{AssignedAddress: newAddress, balance: 0, statusPaid:false}
 
 }
 //todo: Create new Address via rpc call
-func getNewAddress() string {
+func GetNewAddress() string {
 	return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 }

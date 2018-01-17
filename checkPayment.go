@@ -59,7 +59,7 @@ func Check(customer *Customer) bool{
 
 	//fmt.Println(customer)
 
-	trackPayment(client, currentIndex, &customer, price)
+	trackPayment(client, currentIndex, customer, price)
 
 	fmt.Println(customer)
 	return customer.statusPaid

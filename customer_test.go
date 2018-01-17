@@ -4,9 +4,6 @@ import (
 	"testing"
 )
 
-func mock_GetNewAddress() string {
-	return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
-}
 
 
 func TestGetNewAddress(t *testing.T) {
@@ -44,4 +41,8 @@ func TestCreateCustomer(t *testing.T) {
 	if actualCustomer.AssignedAddress != expectedAddress {
 		t.Errorf("CreateCustomer returned unexpected customer object AssignedAddress : got %v want %v", actualCustomer.AssignedAddress, expectedAddress)
 	}
+}
+
+func mock_GetNewAddress() string {
+	return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 }

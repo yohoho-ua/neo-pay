@@ -15,4 +15,5 @@
 
 vendor/
 
+#IDE
 .idea/

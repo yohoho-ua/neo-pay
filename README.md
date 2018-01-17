@@ -15,7 +15,12 @@ dependencies:
 ```
 go get github.com/CityOfZion/neo-go-sdk
 ```
+**gorilla/mux**
+```
+go get -u github.com/gorilla/mux
+```
+
 run:
 ```
-go run main.go rpcClieng.go
+go run main.go customer.go checkPayment.go
 ```

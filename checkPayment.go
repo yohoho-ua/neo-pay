@@ -81,7 +81,7 @@ func trackPayment(client neo.Client, currentIndex int64, customer *Customer,  pr
 		//detect address
 		for _, element := range transactions {
 			//fmt.Println(element)
-			checkVouts(element, customer.AssignedAddress, customer)
+			checkVouts(element, customer)
 		}
 		fmt.Printf("current index : %v, balance: %v \n", currentIndex, customer.balance)
 
@@ -94,9 +94,9 @@ func trackPayment(client neo.Client, currentIndex int64, customer *Customer,  pr
 	}
 }
 
-func checkVouts(transaction models.Transaction, address string, customer *Customer) {
+func checkVouts(transaction models.Transaction, customer *Customer) {
 	for _, vout := range transaction.Vout {
-		if vout.Address == address && vout.Asset == assetTypeNEO {
+		if vout.Address == customer.AssignedAddress && vout.Asset == assetTypeNEO {
 			paidAmount, err := strconv.ParseInt(vout.Value, 10, 64)
 			if err != nil {
 				log.Fatal(err)

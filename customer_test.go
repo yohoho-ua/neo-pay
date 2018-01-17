@@ -27,7 +27,9 @@ func TestCreateCustomer(t *testing.T) {
 	expectedStatusPaid := false
 	expectedAddress := "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 
+
 	actualCustomer := CreateCustomer(mock_GetNewAddress)//mocked
+
 
 	if actualCustomer.balance != expectedBalance {
 		t.Errorf("CreateCustomer returned unexpected customer object balance : got %v want %v", actualCustomer.balance, expectedBalance)

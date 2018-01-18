@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"github.com/CityOfZion/neo-go-sdk/neo"
+	//"github.com/CityOfZion/neo-go-sdk/neo"
 	"github.com/CityOfZion/neo-go-sdk/neo/models"
 	"fmt"
 	"os"
@@ -16,93 +16,58 @@ const (
 
 	//amount of blocks that will be tracked after customer has got payment address. Max wait time, default - 24 hours (or 5760 blocks, 15 sec/block)
 	//maxAddressLife = (60 * 60  * 24) / 15
-	maxAddressLife = (60 *10) / 15 //for test
+	maxAddressLife = (60 * 60 * 24 * 10) //for test
 )
 
-
-
-//from config.json
-type Configuration struct {
-	NodeURI string
-}
-
-func Check(customer *Customer) bool{
-	configuration := initConfig()
-	client := neo.NewClient(configuration.NodeURI)
-	ok := client.Ping()
-	if !ok {
-		log.Fatal("Unable to connect to NEO node")
-	}
-
-	//get current block hash to start tracking
-	bestBlockHash, err := client.GetBestBlockHash()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//get corresponding block object
-	currentBlock, err := client.GetBlockByHash(bestBlockHash)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(currentBlock.Index)
-	//currentIndex := currentBlock.Index
-
-	//for test
-	currentIndex := int64(1817210)
-
-
-	//for test
-	price := int64(26)
-
-	customer.startBlock=currentIndex
-
-	//fmt.Println(customer)
-
-	trackPayment(client, currentIndex, customer, price)
-
+func CheckStatus(customer *Customer, price int64) {
+	customer.startBlock = 1817208
+	currentIndex := customer.startBlock + 1
+	var transactions []models.Transaction
 	fmt.Println(customer)
-	return customer.statusPaid
-}
-func trackPayment(client neo.Client, currentIndex int64, customer *Customer,  price int64) {
 	for {
-		if (currentIndex - customer.startBlock)>= maxAddressLife  {
+		//Check if payment was not made for too long (constant maxAddressLife)
+		if (!isAddressStillValid(currentIndex, customer.startBlock)) {
 			fmt.Println("Payment not found")
-			break
+			return
 		}
-		currentBlock, err := client.GetBlockByIndex(currentIndex)
-		if err != nil {
-			log.Fatal(err)
-		}
+
+		currentBlock := GetBlockByIndex(currentIndex)
+
 		//all transactions for current (last) block
-		var transactions []models.Transaction = currentBlock.Transactions
+		transactions = currentBlock.Transactions
 
 
-		//detect address
+		//detect payment address in vouts of current transaction
 		for _, element := range transactions {
-			//fmt.Println(element)
+			//if payment has found - increase customer Balance
 			checkVouts(element, customer)
 		}
-		fmt.Printf("current index : %v, balance: %v \n", currentIndex, customer.balance)
+		fmt.Printf("current index : %v, balance: %v \n", currentIndex, customer.Balance)
 
-		if customer.balance >= price {
+		//check customer Balance enough
+		if customer.Balance >= price {
 			fmt.Println("sucsess")
-			customer.statusPaid = true
-			break
-		} else {
-			currentIndex++
+			customer.StatusPaid = true
+			return
 		}
+		currentIndex++
 	}
+}
+func isAddressStillValid(currentBlockIndex int64, startBlockIndex int64) bool {
+	//fmt.Printf("currentBlockIndex = %d, startBlockIndex = %d, maxAddressLife = %d, diff = %d \n", currentBlockIndex, startBlockIndex, maxAddressLife, (currentBlockIndex-startBlockIndex))
+	return (currentBlockIndex - startBlockIndex) < maxAddressLife
 }
 
 func checkVouts(transaction models.Transaction, customer *Customer) {
+	//fmt.Println(customer)
 	for _, vout := range transaction.Vout {
+		//fmt.Printf("address: %v, asset: %v,  value: %v /n", vout.Address, vout.Asset, vout.Value)
 		if vout.Address == customer.AssignedAddress && vout.Asset == assetTypeNEO {
 			paidAmount, err := strconv.ParseInt(vout.Value, 10, 64)
 			if err != nil {
 				log.Fatal(err)
 			}
-			customer.balance = customer.balance + paidAmount
+			customer.Balance = customer.Balance + paidAmount
 		}
 	}
 

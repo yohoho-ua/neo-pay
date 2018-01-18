@@ -49,16 +49,6 @@ func TestCheckVouts(t *testing.T) {
 }
 
 
-func TestInitConfig(t *testing.T) {
-	configuratin := Configuration{NodeURI:"http://localhost:10332"}
-	expectedURI := configuratin.NodeURI
-	actualURI := initConfig().NodeURI
-
-	if actualURI != expectedURI {
-		t.Errorf("initConfig returned unexpected confiuration: got %v want %v", actualURI, expectedURI)
-	}
-
-}
 
 func TestIsAddressStillValid(t *testing.T) {
 	expectedTrue := true

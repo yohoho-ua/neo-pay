@@ -2,11 +2,8 @@ package main
 
 import (
 	"log"
-	//"github.com/CityOfZion/neo-go-sdk/neo"
 	"github.com/CityOfZion/neo-go-sdk/neo/models"
 	"fmt"
-	"os"
-	"encoding/json"
 	"strconv"
 )
 
@@ -73,16 +70,7 @@ func checkVouts(transaction models.Transaction, customer *Customer) {
 
 }
 
-func initConfig() *Configuration {
-	file, _ := os.Open("config.json")
-	decoder := json.NewDecoder(file)
-	configuration := Configuration{}
-	err := decoder.Decode(&configuration)
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	return &configuration
-}
+
 
 
 

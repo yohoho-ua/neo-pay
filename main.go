@@ -5,20 +5,41 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
+	//"github.com/gorilla/sessions"
+	//"encoding/gob"
 	//"github.com/CityOfZion/neo-go-sdk/neo"
 	//"github.com/CityOfZion/neo-go-sdk/neo/models"
 	//"fmt"
+	"github.com/gorilla/sessions"
+	"os"
 )
 
+//from config.json
+type Configuration struct {
+	NodeURI string
+}
 
 
+var (
+	key = []byte("super-duper-secret-key-yohoho")
+	store = sessions.NewCookieStore(key)
+	CurrentCustomer Customer
+)
 
 //var customers [] Customer
-var CurrentCustomer Customer
 
 func AddressHandler(w http.ResponseWriter, req *http.Request) {
+	session, _ := store.Get(req, "cookie-name")
 
+	// Check if user is authenticated
+	if address, ok := session.Values["address"].(string); !ok || address=="" {
 	CurrentCustomer = CreateCustomer(GetNewAddress)
+	session.Values["address"] = CurrentCustomer.AssignedAddress
+	session.Save(req, w)
+		//http.Error(w, "Forbidden", http.StatusForbidden)
+		//return
+	}
+
 	//fmt.Println(CurrentCustomer)
 	json.NewEncoder(w).Encode(CurrentCustomer)
 	//w.Write(customer.AssignedAddress)
@@ -44,6 +65,22 @@ func newRouter() *mux.Router {
 
 func main() {
 
+	//gob.Register(Customer{})
 	router := newRouter()
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
+
+
+func InitConfig() *Configuration {
+	file, _ := os.Open("config.json")
+	decoder := json.NewDecoder(file)
+	configuration := Configuration{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &configuration
+}
+
+
+

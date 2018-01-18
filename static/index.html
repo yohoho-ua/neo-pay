@@ -31,8 +31,8 @@
         <button v-on:click="checkStatus" type="submit" class="btn btn-outline-primary" id = "checkStatusButon">check status</button>
         <br><br>
 
-        <div v-if="checked==true? true: false">
-            <p class="lead">{{statusPaidMessage}}</p>
+        <div v-if="checked">
+            <p class="lead">{{statusMessage}}</p>
             <p v-if="balance!=-1? true: false"class="card-title lead"> Your balance is {{balance}}</p>
         </div>
     </div>

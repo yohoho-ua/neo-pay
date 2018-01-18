@@ -11,11 +11,12 @@ new Vue ({
             sellerAddress: '',
             message: 'Click for new payment address',
             balance: -1,
-            statusPaidMessage: '',
+            statusMessage: '',
             checked: false
         },
         methods:{
             checkStatus: function () {
+                this.statusMessage = "pending..."
                 this.checked = true;
                 console.log(this.checked)
                 fetch("/status")
@@ -26,8 +27,8 @@ new Vue ({
                 this.statusPaid = json.status;
                 this.balance = json.balance;
                 if (this.statusPaid){
-                    this.statusPaidMessage = "Your payment was made"}
-                else {this.statusPaidMessage = "pending..."}
+                    this.statusMessage = "Your payment was made"}
+                else {this.statusMessage = "Your payment wasn't found"}
             })
             },
 

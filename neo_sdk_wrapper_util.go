@@ -10,10 +10,7 @@ import (
 	//"strconv"
 )
 
-//from config.json
-type Configuration struct {
-	NodeURI string
-}
+
 
 var client neo.Client
 
@@ -36,7 +33,7 @@ func GetBlockByIndex(index int64) *models.Block {
 	return block
 }
 func initClient() {
-	configuration := initConfig()
+	configuration := InitConfig()
 	client = neo.NewClient(configuration.NodeURI)
 	ok := client.Ping()
 	if !ok {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"testing"
-	//"fmt"
+	"fmt"
 )
 
 
@@ -10,8 +10,9 @@ import (
 func TestGetNewAddress(t *testing.T) {
 	expectedLength := len("AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4")
 
-	actualLength := len(GetNewAddress())
-
+	actualAddress :=GetNewAddress()
+	actualLength := len(actualAddress)
+	fmt.Printf("actual address = %v\n", actualAddress )
 	if actualLength != expectedLength {
 		t.Errorf("GetNewAddress returned unexpected NEO Address: got %v want %v", actualLength, expectedLength)
 	}

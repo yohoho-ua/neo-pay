@@ -33,7 +33,7 @@ func AddressHandler(w http.ResponseWriter, req *http.Request) {
 
 	// Check if user is authenticated
 	if address, ok := session.Values["address"].(string); !ok || address=="" {
-	CurrentCustomer = CreateCustomer(GetNewAddress)
+	CurrentCustomer= CreateCustomer(GetNewAddress)
 	session.Values["address"] = CurrentCustomer.AssignedAddress
 	session.Save(req, w)
 		//http.Error(w, "Forbidden", http.StatusForbidden)
@@ -67,19 +67,23 @@ func main() {
 
 	//gob.Register(Customer{})
 	router := newRouter()
-	log.Fatal(http.ListenAndServe(":8080", router))
+	//log.Fatal(http.ListenAndServe(":8080", router))
+	err:= http.ListenAndServe(":8080", router)
+	if err != nil {
+		log.Printf("Server x_x : %v", err)
+	}
 }
 
 
-func InitConfig() *Configuration {
+func InitConfig() (*Configuration, error) {
 	file, _ := os.Open("config.json")
 	decoder := json.NewDecoder(file)
 	configuration := Configuration{}
 	err := decoder.Decode(&configuration)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	return &configuration
+	return &configuration, err
 }
 
 

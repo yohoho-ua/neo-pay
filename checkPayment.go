@@ -17,7 +17,9 @@ const (
 )
 
 func CheckStatus(customer *Customer, price int64) {
-	customer.StartBlock = 1817208
+
+	customer.StartBlock = 1817208 //for test
+
 	currentIndex := customer.StartBlock + 1
 	var transactions []models.Transaction
 	fmt.Println(customer)
@@ -62,7 +64,8 @@ func checkVouts(transaction models.Transaction, customer *Customer) {
 		if vout.Address == customer.AssignedAddress && vout.Asset == assetTypeNEO {
 			paidAmount, err := strconv.ParseInt(vout.Value, 10, 64)
 			if err != nil {
-				log.Fatal(err)
+				log.Println("vout.Value parse error, NaN?")
+				return
 			}
 			customer.Balance = customer.Balance + paidAmount
 		}

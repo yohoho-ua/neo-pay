@@ -5,27 +5,26 @@ import (
 	"fmt"
 )
 
-
-
 func TestGetNewAddress(t *testing.T) {
 	expectedLength := len("AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4")
 
-	actualAddress :=GetNewAddress()
+	actualAddress, err := GetNewAddress()
+	if err != nil {
+		t.Errorf("GetNewAddress returned error: %v", err)
+	}
 	actualLength := len(actualAddress)
-	fmt.Printf("actual address = %v\n", actualAddress )
+	fmt.Printf("actual address = %v\n", actualAddress)
 	if actualLength != expectedLength {
 		t.Errorf("GetNewAddress returned unexpected NEO Address: got %v want %v", actualLength, expectedLength)
 	}
 }
 
-
 func TestCreateCustomer(t *testing.T) {
 
 	var expectedBalance int64 = 0
-	expectedStartBlock  := GetCurrentBlockIndex();
+	expectedStartBlock := GetCurrentBlockIndex();
 	expectedStatusPaid := false
 	expectedAddress := "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
-
 
 	actualCustomer := CreateCustomer(mock_GetNewAddress)//mocked
 
@@ -45,6 +44,6 @@ func TestCreateCustomer(t *testing.T) {
 	}
 }
 
-func mock_GetNewAddress() string {
-	return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
+func mock_GetNewAddress() (string, error) {
+	return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4", nil
 }

@@ -12,30 +12,36 @@ import (
 
 
 
-var client neo.Client
+var Client neo.Client
 
 func GetCurrentBlockIndex() int64 {
-	if client.NodeURI == "" {
+	if Client.NodeURI == "" {
 		initClient()
 	}
-	currentBlockIndex, err := client.GetBlockCount()
+	currentBlockIndex, err := Client.GetBlockCount()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return -1
 	}
 	return currentBlockIndex
 }
 
 func GetBlockByIndex(index int64) *models.Block {
-	block, err := client.GetBlockByIndex(index)
+	block, err := Client.GetBlockByIndex(index)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil
 	}
 	return block
 }
-func initClient() {
-	configuration := InitConfig()
-	client = neo.NewClient(configuration.NodeURI)
-	ok := client.Ping()
+func initClient()  {
+	configuration, err := InitConfig()
+	if err != nil {
+		log.Fatal("Node URI not initialized: %v", err)
+	}
+
+	Client = neo.NewClient(configuration.NodeURI)
+	ok := Client.Ping()
 	if !ok {
 		log.Fatal("Unable to connect to NEO node")
 	}

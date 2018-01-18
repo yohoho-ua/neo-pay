@@ -17,24 +17,33 @@ type Customer struct {
 }
 
 //for better testing and mocking
-type NewAddressGetter func() string
+type NewAddressGetter func() (string, error)
 
 func CreateCustomer(addressGetter NewAddressGetter) Customer {
-	_assignedAddress := addressGetter();
+	_assignedAddress, err := addressGetter();
+	if err != nil {
+		log.Printf("Customer will be returned without address. %v\n", err)
+		_assignedAddress = "0000000000000000000000000000000000"
+	}
 	_startBlock := GetCurrentBlockIndex()
 	return Customer{AssignedAddress: _assignedAddress, Balance: 0, StartBlock: _startBlock, StatusPaid:false}
 
 }
 
-func GetNewAddress() string {
+func GetNewAddress() (string, error) {
 	//return "AeQeWwHki197HDhaZJFKLeUN5tzi32gyZr"
 	//return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 
 	//build url
-	configuration := InitConfig()
+	configuration, err := InitConfig()
+	if err != nil {
+		log.Printf("Node URI not initialized. %v\n")
+		return "", err
+	}
 	u, err := url.Parse(configuration.NodeURI)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Node URI not parsed. %v\n", err)
+		return "", err
 	}
 
 	q := u.Query()
@@ -54,11 +63,12 @@ func GetNewAddress() string {
 
 	var response Response
 
-	error := json.Unmarshal(buf, &response)
-	if error != nil {
-		log.Fatal(error)
+	err = json.Unmarshal(buf, &response)
+	if err != nil {
+		log.Printf("Response not unmarshalled. %v\n", err)
+		return "", err
 	}
 
-	return response.Result
+	return response.Result, nil
 }
 

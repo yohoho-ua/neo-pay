@@ -11,9 +11,9 @@ Running rpc client with open wallet required. Use neo-cli
 ```  
 enter your pass
 
-dependencies: 
-**neo-go-sdk**
-**gorilla/mux**
+dependencies:   
+https://github.com/CityOfZion/neo-go-sdk  
+https://github.com/gorilla/mux
 
 
 prepare:
@@ -21,4 +21,4 @@ prepare:
 go get
 go build
 ```
-run exe
+run **neo-pay.exe**

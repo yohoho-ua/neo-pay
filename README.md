@@ -13,15 +13,12 @@ enter your pass
 
 dependencies: 
 **neo-go-sdk**
-```
-go get github.com/CityOfZion/neo-go-sdk
-```
 **gorilla/mux**
-```
-go get -u github.com/gorilla/mux
-```
 
-run:
+
+prepare:
 ```
-go run main.go customer.go checkPayment.go neo_sdk_wrapper_util.go
+go get
+go build
 ```
+run exe

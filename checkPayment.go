@@ -20,13 +20,13 @@ const (
 )
 
 func CheckStatus(customer *Customer, price int64) {
-	customer.startBlock = 1817208
-	currentIndex := customer.startBlock + 1
+	customer.StartBlock = 1817208
+	currentIndex := customer.StartBlock + 1
 	var transactions []models.Transaction
 	fmt.Println(customer)
 	for {
 		//Check if payment was not made for too long (constant maxAddressLife)
-		if (!isAddressStillValid(currentIndex, customer.startBlock)) {
+		if (!isAddressStillValid(currentIndex, customer.StartBlock)) {
 			fmt.Println("Payment not found")
 			return
 		}

@@ -3,7 +3,7 @@ package main
 type Customer struct {
 	AssignedAddress string 	`json:"address,omitempty"`
 	Balance         int64  		`json:"balance,omitempty"`
-	startBlock      int64
+	StartBlock      int64
 	StatusPaid      bool 		`json:"status,omitempty"`
 }
 
@@ -13,7 +13,7 @@ type NewAddressGetter func() string
 func CreateCustomer(addressGetter NewAddressGetter) Customer {
 	_assignedAddress := addressGetter();
 	_startBlock := GetCurrentBlockIndex()
-	return Customer{AssignedAddress: _assignedAddress, Balance: 0, startBlock: _startBlock, StatusPaid:false}
+	return Customer{AssignedAddress: _assignedAddress, Balance: 0, StartBlock: _startBlock, StatusPaid:false}
 
 }
 //todo: Create new Address via rpc call

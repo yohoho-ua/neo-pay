@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	//"fmt"
 )
 
 
@@ -20,7 +21,7 @@ func TestGetNewAddress(t *testing.T) {
 func TestCreateCustomer(t *testing.T) {
 
 	var expectedBalance int64 = 0
-	var expectedStartBlock int64 = 0
+	expectedStartBlock  := GetCurrentBlockIndex();
 	expectedStatusPaid := false
 	expectedAddress := "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 
@@ -28,14 +29,14 @@ func TestCreateCustomer(t *testing.T) {
 	actualCustomer := CreateCustomer(mock_GetNewAddress)//mocked
 
 
-	if actualCustomer.balance != expectedBalance {
-		t.Errorf("CreateCustomer returned unexpected customer object balance : got %v want %v", actualCustomer.balance, expectedBalance)
+	if actualCustomer.Balance != expectedBalance {
+		t.Errorf("CreateCustomer returned unexpected customer object balance : got %v want %v", actualCustomer.Balance, expectedBalance)
 	}
-	if actualCustomer.startBlock != expectedBalance {
-		t.Errorf("CreateCustomer returned unexpected customer object startBlock : got %v want %v", actualCustomer.balance, expectedStartBlock)
+	if actualCustomer.StartBlock != expectedStartBlock {
+		t.Errorf("CreateCustomer returned unexpected customer object startBlock : got %+v want %+v", actualCustomer.StartBlock, expectedStartBlock)
 	}
-	if actualCustomer.statusPaid != expectedStatusPaid {
-		t.Errorf("CreateCustomer returned unexpected customer object statusPaid : got %v want %v", actualCustomer.statusPaid, expectedStatusPaid)
+	if actualCustomer.StatusPaid != expectedStatusPaid {
+		t.Errorf("CreateCustomer returned unexpected customer object statusPaid : got %v want %v", actualCustomer.StatusPaid, expectedStatusPaid)
 	}
 
 	if actualCustomer.AssignedAddress != expectedAddress {

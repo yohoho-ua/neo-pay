@@ -7,7 +7,7 @@ import (
 
 func TestCheckVouts(t *testing.T) {
 
-	customer := Customer{AssignedAddress: "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4", startBlock: 182117, statusPaid: false, balance: 0}
+	customer := Customer{AssignedAddress: "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4", StartBlock: 182117, StatusPaid: false, Balance: 0}
 
 	var vouts [] models.Vout
 
@@ -40,13 +40,14 @@ func TestCheckVouts(t *testing.T) {
 	checkVouts(transaction, &customer)
 	expectedBalance := int64(13)
 
-	actualBalance := customer.balance
+	actualBalance := customer.Balance
 
 	if actualBalance != expectedBalance {
 		t.Errorf("checkVouts returned unexpected customer balance: got %v want %v", actualBalance, expectedBalance)
 	}
 
 }
+
 
 func TestInitConfig(t *testing.T) {
 	configuratin := Configuration{NodeURI:"http://localhost:10332"}
@@ -59,7 +60,23 @@ func TestInitConfig(t *testing.T) {
 
 }
 
+func TestIsAddressStillValid(t *testing.T) {
+	expectedTrue := true
+	actualTrue := isAddressStillValid(100, 50)
 
+	expectedFalse := false
+	actualFalse := isAddressStillValid(1000000000000, 50)
+
+
+	if actualTrue != expectedTrue {
+		t.Errorf("isAddressStillValid returned unexpected bool value: got %v want %v", actualTrue, expectedTrue)
+	}
+
+	if actualFalse != expectedFalse {
+		t.Errorf("isAddressStillValid returned unexpected bool value: got %v want %v", actualTrue, expectedFalse)
+	}
+
+}
 
 
 

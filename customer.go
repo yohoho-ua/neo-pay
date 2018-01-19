@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"net/http"
 	"encoding/json"
-	//"fmt"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -20,10 +20,10 @@ type Customer struct {
 type NewAddressGetter func() (string, error)
 
 func CreateCustomer(addressGetter NewAddressGetter) Customer {
-	_assignedAddress, err := addressGetter();
+	_assignedAddress, err := addressGetter()
 	if err != nil {
-		log.Printf("Customer will be returned without address. %v\n", err)
-		_assignedAddress = "0000000000000000000000000000000000"
+		fmt.Printf("Customer will be returned without address. %v\n", err)
+		_assignedAddress = ""
 	}
 	_startBlock := GetCurrentBlockIndex()
 	return Customer{AssignedAddress: _assignedAddress, Balance: 0, StartBlock: _startBlock, StatusPaid:false}
@@ -59,16 +59,24 @@ func GetNewAddress() (string, error) {
 
 	type Response struct {
 		Result string `json:"result"`
+		Error map[string]string `json:"error"`
 	}
 
 	var response Response
 
-	err = json.Unmarshal(buf, &response)
-	if err != nil {
-		log.Printf("Response not unmarshalled. %v\n", err)
-		return "", err
+	//check is wallet open and decrypted
+	mapConfig := make(map[string]interface{})
+	json.Unmarshal(buf, &mapConfig)
+	if mapConfig["error"] != nil {
+	fmt.Printf("%+v\n", mapConfig["error"])
+	fmt.Println("Wallet is closed, open please")
+	return "", nil
 	}
 
+	err = json.Unmarshal(buf, &response)
+	if err != nil {
+		return "", err
+	}
 	return response.Result, nil
 }
 

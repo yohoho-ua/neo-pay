@@ -1,48 +1,40 @@
 /**
- * Created by zim on 17-Jan-18.
+ * Created by zim on 19-Jan-18.
  */
-new Vue ({
-        el: '#app',
-        // mounted: function () {
-        //     this.fetchAssets();
-        // },
-        data: {
-            address: '',
-            sellerAddress: '',
-            message: 'Click for new payment address',
-            balance: -1,
-            statusMessage: '',
-            checked: false
-        },
-        methods:{
-            checkStatus: function () {
-                this.statusMessage = "pending..."
-                this.checked = true;
-                console.log(this.checked)
-                fetch("/status")
-                    .then(response => response.json())
-                .then(json => {
-                    console.log(json);
-                this.address = json.address;
-                this.statusPaid = json.status;
-                this.balance = json.balance;
-                if (this.statusPaid){
-                    this.statusMessage = "Your payment was made"}
-                else {this.statusMessage = "Your payment wasn't found"}
-            })
-            },
 
-            getAddress: function () {
-                fetch("/address")
-                    .then(response => response.json())
-                .then(json => {
-                    console.log(json);
-                this.address = json.address;
-            })
-            }
+window.App = {
+    start: function () {
 
+    },
+    getAddress: function () {
+        var url = "/status";
+        text = $('#address').text();
+        if (text === "") {
+            url = "/address"
         }
+        fetch(url)
+            .then(response => response.json())
+            .then(customer => {
+                console.log(customer);
+                document.getElementById("address").innerHTML = customer.address;
+                document.getElementById("balance").innerHTML = customer.deposit;
+                document.getElementById("checked").style.display = "block";
 
+                setInterval(function () {
+                   // console.log("!!!")
+                    window.App.getAddress()
+                }, 3000);
+            })
+    },
 
+    setStatus: function () {
+        $.get("/status", function (data, status) {
+            $("#balance").text(data.block)
+            console.log("Data: " + data.json() + "\nStatus: " + status);
+        });
     }
-);
+}
+
+window.addEventListener('load', function () {
+    App.start()
+})

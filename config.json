@@ -1,3 +1,4 @@
 {
-    "NodeURI": "http://localhost:10332"
+    "NodeURI": "http://localhost:10332",
+    "WaitTimeSec": 180
 }

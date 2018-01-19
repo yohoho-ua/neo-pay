@@ -1,19 +1,19 @@
 package main
 
 import (
-	"github.com/labstack/gommon/log"
-	"net/url"
-	"net/http"
 	"encoding/json"
 	"fmt"
+	"github.com/labstack/gommon/log"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 )
 
 type Customer struct {
-	AssignedAddress string        `json:"address,omitempty"`
-	Balance         int64                `json:"balance,omitempty"`
-	StartBlock      int64
-	StatusPaid      bool                `json:"status,omitempty"`
+	AssignedAddress string `json:"address"`
+	Deposit         int64  `json:"deposit"`
+	StartBlock      int64  `json:"block"`
+	StatusPaid      bool   `json:"status"`
 }
 
 //for better testing and mocking
@@ -26,7 +26,7 @@ func CreateCustomer(configuration *Configuration) Customer {
 		_assignedAddress = ""
 	}
 	_startBlock := GetCurrentBlockIndex(configuration)
-	return Customer{AssignedAddress: _assignedAddress, Balance: 0, StartBlock: _startBlock, StatusPaid:false}
+	return Customer{AssignedAddress: _assignedAddress, Deposit: 0, StartBlock: _startBlock, StatusPaid: false}
 
 }
 
@@ -51,10 +51,9 @@ func GetNewAddress(configuration *Configuration) (string, error) {
 
 	buf, _ := ioutil.ReadAll(responseBlob.Body)
 
-
 	type Response struct {
-		Result string `json:"result"`
-		Error map[string]string `json:"error"`
+		Result string            `json:"result"`
+		Error  map[string]string `json:"error"`
 	}
 
 	var response Response
@@ -63,9 +62,9 @@ func GetNewAddress(configuration *Configuration) (string, error) {
 	mapConfig := make(map[string]interface{})
 	json.Unmarshal(buf, &mapConfig)
 	if mapConfig["error"] != nil {
-	fmt.Printf("%+v\n", mapConfig["error"])
-	fmt.Println("Wallet is closed, open please")
-	return "", nil
+		fmt.Printf("%+v\n", mapConfig["error"])
+		fmt.Println("Wallet is closed, open please")
+		return "", nil
 	}
 
 	err = json.Unmarshal(buf, &response)
@@ -74,4 +73,3 @@ func GetNewAddress(configuration *Configuration) (string, error) {
 	}
 	return response.Result, nil
 }
-

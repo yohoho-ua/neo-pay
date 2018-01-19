@@ -12,7 +12,7 @@
 <div id="app">
     <nav class="navbar navbar-dark bg-primary mb-3">
         <div class="container">
-            <a href="#" class="navbar-brand">NEO-PAY</a>
+            <a href="#" class="navbar-brand">My wallet</a>
         </div>
     </nav>
 
@@ -23,26 +23,26 @@
 
 
         <!--</form>-->
-        <p class = "lead">Click for new payment address</p>
-        <button type="submit" class="btn btn-outline-primary" id ="buttonGetAddress" onclick="App.getAddress()">get address</button>
+        <p class = "lead">{{message}}</p>
 
-        <br><p id="address" class = "lead"></p>
+        <button v-on:click="getAddress" type="submit" class="btn btn-outline-primary" id = "getAddressButton">get address</button>
+
+        <br><p class = "lead">{{address}}</p>
 
         <!--<p class="lead">Input amount</p>-->
         <!--<input name="amount" type="text" id="sum" v-bind:class="checkSumField" v-model="sum">-->
 
-        <button type="submit" class="btn btn-outline-primary" id = "checkStatusButon">check status</button>
+        <button v-on:click="checkStatus" type="submit" class="btn btn-outline-primary" id = "checkStatusButon">check status</button>
         <br><br>
 
-        <div id="checked" style="display: none">
-            <p id="status"class="lead"></p>
-            <p class="card-title lead"> Your balance is <span id="balance"></span></p>
+        <div v-if="checked">
+            <p class="lead">{{statusMessage}}</p>
+            <p v-if="deposit!=-1? true: false"class="card-title lead"> Your balance is {{deposit}}</p>
         </div>
-        <p class="lead">{{testTickr}}</p>
+            <p class="lead">{{testTickr}}</p>
     </div>
 </div>
 </div>
-<script src="app.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="app(Vue).js"></script>
 </body>
 </html>

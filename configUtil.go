@@ -8,6 +8,7 @@ import (
 //from config.json
 type Configuration struct {
 	NodeURI string
+	WaitTimeSec int
 }
 
 func NewConfiguraion() (*Configuration, error) {

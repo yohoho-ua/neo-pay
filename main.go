@@ -5,50 +5,49 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+
 	//"github.com/gorilla/sessions"
 	//"encoding/gob"
 	//"github.com/CityOfZion/neo-go-sdk/neo"
 	//"github.com/CityOfZion/neo-go-sdk/neo/models"
-	//"fmt"
-	"github.com/gorilla/sessions"
+	"fmt"
+	//"github.com/gorilla/sessions"
 	//"os"
 )
 
 
 
 var (
-	key = []byte("super-duper-secret-key-yohoho")
-	store = sessions.NewCookieStore(key)
 	CurrentCustomer Customer
+	//configuration *Configuration
 )
 
 //var customers [] Customer
 
 func AddressHandler(w http.ResponseWriter, req *http.Request) {
-	session, _ := store.Get(req, "cookie-name")
-
+	if mux.Vars(req)
 	// Check if user is authenticated
-	if address, ok := session.Values["address"].(string); !ok || address == "" {
 		configuration, err :=NewConfiguraion()
 		if err != nil {
 			log.Fatal(err)
 		}
 		CurrentCustomer = CreateCustomer(configuration)
-		session.Values["address"] = CurrentCustomer.AssignedAddress
-		session.Save(req, w)
 		//http.Error(w, "Forbidden", http.StatusForbidden)
 		//return
-	}
 
-	//fmt.Println(CurrentCustomer)
+	fmt.Println(CurrentCustomer)
 	json.NewEncoder(w).Encode(CurrentCustomer)
 	//w.Write(customer.AssignedAddress)
 }
 
 func StatusHandler(w http.ResponseWriter, req *http.Request) {
-
+	//configuration, err :=NewConfiguraion()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	//26 is test price-value, later should be gotten from front
-	CheckStatus(&CurrentCustomer, 26)
+	//CheckStatus(&CurrentCustomer, 26, configuration)
 	json.NewEncoder(w).Encode(CurrentCustomer)
 }
 

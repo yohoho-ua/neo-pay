@@ -2,7 +2,7 @@ package main
 
 import (
 	"testing"
-	"fmt"
+	//"fmt"
 )
 var configuration = Configuration{NodeURI:"http://localhost:10332"}
 
@@ -29,8 +29,8 @@ func TestCreateCustomer(t *testing.T) {
 	actualCustomer := CreateCustomer(&Configuration{NodeURI:"http://localhost:10332"})
 
 
-	if actualCustomer.Balance != expectedBalance {
-		t.Errorf("CreateCustomer returned unexpected customer object balance : got %v want %v", actualCustomer.Balance, expectedBalance)
+	if actualCustomer.Deposit != expectedBalance {
+		t.Errorf("CreateCustomer returned unexpected customer object balance : got %v want %v", actualCustomer.Deposit, expectedBalance)
 	}
 	if actualCustomer.StartBlock != expectedStartBlock {
 		t.Errorf("CreateCustomer returned unexpected customer object startBlock : got %+v want %+v", actualCustomer.StartBlock, expectedStartBlock)

@@ -7,7 +7,7 @@ import (
 
 func TestCheckVouts(t *testing.T) {
 
-	customer := Customer{AssignedAddress: "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4", StartBlock: 182117, StatusPaid: false, Balance: 0}
+	customer := Customer{AssignedAddress: "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4", StartBlock: 182117, StatusPaid: false, Deposit: 0}
 
 	var vouts [] models.Vout
 
@@ -37,10 +37,10 @@ func TestCheckVouts(t *testing.T) {
 
 	transaction := models.Transaction{Vout:vouts}
 
-	checkVouts(transaction, &customer)
+	checkCurrentBlockTransactions(transaction, &customer)
 	expectedBalance := int64(13)
 
-	actualBalance := customer.Balance
+	actualBalance := customer.Deposit
 
 	if actualBalance != expectedBalance {
 		t.Errorf("checkVouts returned unexpected customer balance: got %v want %v", actualBalance, expectedBalance)

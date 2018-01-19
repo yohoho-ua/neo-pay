@@ -11,13 +11,9 @@ import (
 	//"github.com/CityOfZion/neo-go-sdk/neo/models"
 	//"fmt"
 	"github.com/gorilla/sessions"
-	"os"
+	//"os"
 )
 
-//from config.json
-type Configuration struct {
-	NodeURI string
-}
 
 
 var (
@@ -32,10 +28,14 @@ func AddressHandler(w http.ResponseWriter, req *http.Request) {
 	session, _ := store.Get(req, "cookie-name")
 
 	// Check if user is authenticated
-	if address, ok := session.Values["address"].(string); !ok || address=="" {
-	CurrentCustomer= CreateCustomer(GetNewAddress)
-	session.Values["address"] = CurrentCustomer.AssignedAddress
-	session.Save(req, w)
+	if address, ok := session.Values["address"].(string); !ok || address == "" {
+		configuration, err :=NewConfiguraion()
+		if err != nil {
+			log.Fatal(err)
+		}
+		CurrentCustomer = CreateCustomer(configuration)
+		session.Values["address"] = CurrentCustomer.AssignedAddress
+		session.Save(req, w)
 		//http.Error(w, "Forbidden", http.StatusForbidden)
 		//return
 	}
@@ -68,22 +68,10 @@ func main() {
 	//gob.Register(Customer{})
 	router := newRouter()
 	//log.Fatal(http.ListenAndServe(":8080", router))
-	err:= http.ListenAndServe(":8080", router)
+	err := http.ListenAndServe(":8080", router)
 	if err != nil {
 		log.Printf("Server x_x : %v", err)
 	}
-}
-
-
-func InitConfig() (*Configuration, error) {
-	file, _ := os.Open("config.json")
-	decoder := json.NewDecoder(file)
-	configuration := Configuration{}
-	err := decoder.Decode(&configuration)
-	if err != nil {
-		return nil, err
-	}
-	return &configuration, err
 }
 
 

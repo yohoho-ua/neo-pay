@@ -17,29 +17,24 @@ type Customer struct {
 }
 
 //for better testing and mocking
-type NewAddressGetter func() (string, error)
+type NewAddressGetter func(Configuration) (string, error)
 
-func CreateCustomer(addressGetter NewAddressGetter) Customer {
-	_assignedAddress, err := addressGetter()
+func CreateCustomer(configuration *Configuration) Customer {
+	_assignedAddress, err := GetNewAddress(configuration)
 	if err != nil {
 		fmt.Printf("Customer will be returned without address. %v\n", err)
 		_assignedAddress = ""
 	}
-	_startBlock := GetCurrentBlockIndex()
+	_startBlock := GetCurrentBlockIndex(configuration)
 	return Customer{AssignedAddress: _assignedAddress, Balance: 0, StartBlock: _startBlock, StatusPaid:false}
 
 }
 
-func GetNewAddress() (string, error) {
+func GetNewAddress(configuration *Configuration) (string, error) {
 	//return "AeQeWwHki197HDhaZJFKLeUN5tzi32gyZr"
 	//return "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 
 	//build url
-	configuration, err := InitConfig()
-	if err != nil {
-		log.Printf("Node URI not initialized. %v\n")
-		return "", err
-	}
 	u, err := url.Parse(configuration.NodeURI)
 	if err != nil {
 		log.Printf("Node URI not parsed. %v\n", err)

@@ -14,9 +14,9 @@ import (
 
 var Client neo.Client
 
-func GetCurrentBlockIndex() int64 {
+func GetCurrentBlockIndex(configuration *Configuration) int64 {
 	if Client.NodeURI == "" {
-		initClient()
+		initClient(configuration)
 	}
 	currentBlockIndex, err := Client.GetBlockCount()
 	if err != nil {
@@ -34,12 +34,7 @@ func GetBlockByIndex(index int64) *models.Block {
 	}
 	return block
 }
-func initClient()  {
-	configuration, err := InitConfig()
-	if err != nil {
-		log.Fatal("Node URI not initialized: %v", err)
-	}
-
+func initClient(configuration *Configuration)  {
 	Client = neo.NewClient(configuration.NodeURI)
 	ok := Client.Ping()
 	if !ok {

@@ -1,9 +1,7 @@
 # NEO-PAY tracker
-Just some code to fetch transactions which have used desired (our deposit)address
-Check if payment was made
-
-![front](https://i.imgur.com/lqy0wOa.png "Kartinochka")  
-![console log](https://i.imgur.com/wqAKLIe.png "Kartinochka2")
+Application generates payment address and tracks if payment was made
+Button will refresh address if needed
+![front](https://i.imgur.com/5pRptrl.png "Kartinochka")  
 
 Running rpc client with open wallet required. Use neo-cli
 ```dotnet neo-cli.dll /rpc

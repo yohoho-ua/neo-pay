@@ -66,7 +66,7 @@ func newRouter() *mux.Router {
 func main() {
 	router := newRouter()
 	//log.Fatal(http.ListenAndServe(":8080", router))
-	err := http.ListenAndServe(":8080", router)
+	err := http.ListenAndServe(":1980", router)
 	if err != nil {
 		log.Printf("Server x_x : %v", err)
 	}

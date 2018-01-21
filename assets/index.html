@@ -24,21 +24,27 @@
 
         <!--</form>-->
         <p class = "lead">Click for new payment address</p>
-        <button type="submit" class="btn btn-outline-primary" id ="buttonGetAddress" onclick="App.getAddress()">get address</button>
+        <button type="submit" class="btn btn-primary" id ="buttonGetAddress" onclick="App.getNewAddress()">get new address</button>
 
-        <br><p id="address" class = "lead"></p>
+        <!--<br><p id="address" class = "lead"></p>-->
+        <p class = "lead">Current paying address:</p>
+        <div  class="alert alert-info" role="alert">
+            <h4 id="address" class="alert-heading"></h4>
+        </div>
 
         <!--<p class="lead">Input amount</p>-->
         <!--<input name="amount" type="text" id="sum" v-bind:class="checkSumField" v-model="sum">-->
 
-        <button type="submit" class="btn btn-outline-primary" id = "checkStatusButon">check status</button>
+        <!--<button type="submit" class="btn btn-outline-primary" id = "checkStatusButon">check status</button>-->
         <br><br>
 
         <div id="checked" style="display: none">
-            <p id="status"class="lead"></p>
-            <p class="card-title lead"> Your balance is <span id="balance"></span></p>
+            <div style="display: inline"><span id="status"></span>
+            <img id="loader" width="30" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+            </div>
+            <p class="card-title lead">Your balance is <span id="balance"></span></p>
+        <p class = "card-title lead" id="test">Last block checked: <span id="blockcount"></span></p>
         </div>
-        <p class="lead">{{testTickr}}</p>
     </div>
 </div>
 </div>

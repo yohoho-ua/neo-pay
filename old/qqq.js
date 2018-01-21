@@ -86,7 +86,7 @@ window.App = {
         })
     },
 
-    setStatus: function (message) {
+    updateStatus: function (message) {
         var status = document.getElementById('status')
         status.innerHTML = message
     },
@@ -104,11 +104,11 @@ window.App = {
 
         hippo.setMaxPlayers(amount, { from: account })
             .then(function (result) {
-                self.setStatus('Transaction complete!')
+                self.updateStatus('Transaction complete!')
                 self.updateAll(result)
             }).catch(function (e) {
             console.log(e)
-            self.setStatus('Error sending transaction; see log.')
+            self.updateStatus('Error sending transaction; see log.')
         })
     },
 
@@ -126,7 +126,7 @@ window.App = {
             })
             .catch(function (e) {
                 console.log(e)
-                self.setStatus('Error sending transaction; see log.')
+                self.updateStatus('Error sending transaction; see log.')
             })
     },
 

@@ -5,7 +5,7 @@ import (
 	"github.com/CityOfZion/neo-go-sdk/neo/models"
 	"fmt"
 	"strconv"
-	"time"
+	//"time"
 )
 
 const (
@@ -17,25 +17,27 @@ const (
 	maxAddressLife = (60 * 60 * 24 * 10) //for test
 )
 
-func CheckStatus(customer *Customer, price int64, configuration *Configuration) {
+func CheckStatus(customer *Customer, configuration *Configuration) {
 
-	customer.StartBlock = 1817208 //for test
+	//customer.StartBlock = 1817208 //for test
 
-	currentIndex := customer.StartBlock + 1
+	currentIndex := customer.StartBlock
 	var transactions []models.Transaction
 	fmt.Println(customer)
 	for {
 
-		//Check if payment was not made for too long (constant maxAddressLife)
-		if (!isAddressStillValid(currentIndex, customer.StartBlock)) {
-			fmt.Println("Payment not found")
-			return
-		}
+		////check if customer is still valid
+		////or if payment was not made for too long (constant maxAddressLife)
+		//if !isAddressStillValid(currentIndex, customer.StartBlock) || customer.StartBlock ==-1 {
+		//	fmt.Printf("Payment for address: %v was not found\n", customer.AssignedAddress)
+		//	return
+		//}
 
 		//wait for new blocks (default 180 sec)
 		if currentIndex >= GetCurrentBlockIndex(configuration) {
-			fmt.Printf("waiting for new blocks for %d sec\n", configuration.WaitTimeSec)
-			time.Sleep(time.Duration(configuration.WaitTimeSec) * time.Millisecond)
+			fmt.Printf("waiting for new blocks\n")
+			//time.Sleep(time.Duration(TestConfiguration.WaitTimeSec) * time.Second)
+			return
 		}
 
 		currentBlock := GetBlockByIndex(currentIndex)
@@ -46,18 +48,18 @@ func CheckStatus(customer *Customer, price int64, configuration *Configuration) 
 
 		//detect payment address in vouts of current transaction
 		for _, element := range transactions {
-			//if payment has found - increase customer Balance
 			checkCurrentBlockTransactions(element, customer)
 		}
 		fmt.Printf("current index : %v, balance: %v \n", currentIndex, customer.Deposit)
 
 		//check customer Balance enough
-		if customer.Deposit >= price {
-			fmt.Println("sucsess")
-			customer.StatusPaid = true
-			return
-		}
+		//if customer.Deposit >= price {
+		//	fmt.Println("sucsess")
+		//	customer.StatusPaid = true
+		//	return
+		//}
 		currentIndex++
+		customer.StartBlock = currentIndex
 	}
 }
 func isAddressStillValid(currentBlockIndex int64, startBlockIndex int64) bool {
@@ -72,6 +74,7 @@ func checkCurrentBlockTransactions(transaction models.Transaction, customer *Cus
 				log.Println("vout.Value parse error, NaN?")
 				return
 			}
+			//if payment was found - increase customer Balance
 			customer.Deposit = customer.Deposit + paidAmount
 		}
 	}

@@ -23,7 +23,7 @@ func GetCurrentBlockIndex(configuration *Configuration) int64 {
 		log.Println(err)
 		return -1
 	}
-	return currentBlockIndex
+	return currentBlockIndex-1
 }
 
 func GetBlockByIndex(index int64) *models.Block {

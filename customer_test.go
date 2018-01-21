@@ -4,12 +4,12 @@ import (
 	"testing"
 	//"fmt"
 )
-var configuration = Configuration{NodeURI:"http://localhost:10332"}
+var TestConfiguration = Configuration{NodeURI:"http://localhost:10332"}
 
 func TestGetNewAddress(t *testing.T) {
 	expectedLength := len("AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4")
 
-	actualAddress, err := GetNewAddress(&configuration)
+	actualAddress, err := GetNewAddress(&TestConfiguration)
 	if err != nil {
 		t.Errorf("GetNewAddress returned error: %v", err)
 	}
@@ -22,7 +22,7 @@ func TestGetNewAddress(t *testing.T) {
 func TestCreateCustomer(t *testing.T) {
 
 	var expectedBalance int64 = 0
-	expectedStartBlock := GetCurrentBlockIndex(&configuration);
+	expectedStartBlock := GetCurrentBlockIndex(&TestConfiguration);
 	expectedStatusPaid := false
 	//expectedAddress := "AcbUNbdFMdYLBronyM3cHBzi49WKEwJWD4"
 

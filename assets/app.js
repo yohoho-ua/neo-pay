@@ -4,14 +4,11 @@
 
 window.App = {
     start: function () {
-
+        window.App.checkStatus();
+        window.App.startTrack();
     },
-    getAddress: function () {
+    checkStatus: function () {
         var url = "/status";
-        text = $('#address').text();
-        if (text === "") {
-            url = "/address"
-        }
         fetch(url)
             .then(response => response.json())
             .then(customer => {
@@ -19,19 +16,20 @@ window.App = {
                 document.getElementById("address").innerHTML = customer.address;
                 document.getElementById("balance").innerHTML = customer.deposit;
                 document.getElementById("checked").style.display = "block";
+                document.getElementById("status").innerHTML = "pending...";
+                document.getElementById("blockcount").innerHTML = (customer.block)-1;
 
-                setInterval(function () {
-                   // console.log("!!!")
-                    window.App.getAddress()
-                }, 3000);
             })
     },
+    startTrack : function() {
+        setInterval(function () {
+            // console.log("!!!")
+            window.App.checkStatus()
+        }, 10000);
+    },
 
-    setStatus: function () {
-        $.get("/status", function (data, status) {
-            $("#balance").text(data.block)
-            console.log("Data: " + data.json() + "\nStatus: " + status);
-        });
+    getNewAddress:function () {
+        $.get("/status?new=true");
     }
 }
 

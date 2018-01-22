@@ -20,3 +20,7 @@ go get
 go build
 ```
 run **neo-pay.exe**
+or
+```
+go run *.go
+```
